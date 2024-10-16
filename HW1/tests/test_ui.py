@@ -1,11 +1,16 @@
+import matplotlib.pyplot as plt
+from matplotlib.ticker import MultipleLocator
 import unittest
 from unittest.mock import patch
 from io import StringIO
 
+import numpy as np
+
+from HW1.scanning_algorithms import bresenham_line
 from HW1.ui import get_input
 
 
-class MyTestCase(unittest.TestCase):
+class TestInput(unittest.TestCase):
     @patch('builtins.input', side_effect=['(1, 2)', '(3, 4)'])
     def test_right_user_keyboard_input(self, mock_input):
         start, end = get_input()
@@ -27,6 +32,35 @@ class MyTestCase(unittest.TestCase):
     def test_invalid_user_keyboard_input(self, mock_stdout, mock_input):
         get_input()
         self.assertEqual(mock_stdout.getvalue().strip(), "Invalid input type")
+
+
+class TestDrawing(unittest.TestCase):
+    def test_slope1(self):
+        fig, ax = plt.subplots()
+        ax.set_xlim(-10, 10)
+        ax.xaxis.set_minor_locator(MultipleLocator(1))
+        ax.set_ylim(-10, 10)
+        ax.yaxis.set_minor_locator(MultipleLocator(1))
+        ax.grid(True)
+        ax.grid(which='minor', linestyle=':', linewidth=0.5)
+        start = (-3, -3)
+        end = (3, 3)
+        x, y = bresenham_line(start, end, 6)
+        ax.scatter(x, y)
+        plt.show()
+
+    def test_slope_less_1(self):
+        fig, ax = plt.subplots()
+        ax.set_xlim(-10, 10)
+        ax.xaxis.set_major_locator(MultipleLocator(1))
+        ax.set_ylim(-10, 10)
+        ax.yaxis.set_major_locator(MultipleLocator(1))
+        ax.grid(True)
+        start = (-3, -3)
+        end = (3, -1)
+        x, y = bresenham_line(start, end, 6)
+        ax.scatter(x, y)
+        plt.show()
 
 
 
