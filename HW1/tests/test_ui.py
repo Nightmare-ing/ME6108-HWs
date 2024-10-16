@@ -36,33 +36,29 @@ class TestInput(unittest.TestCase):
 
 class TestDrawing(unittest.TestCase):
     def test_slope1(self):
-        fig, ax = plt.subplots()
-        ax.set_xlim(-10, 10)
-        ax.xaxis.set_minor_locator(MultipleLocator(1))
-        ax.set_ylim(-10, 10)
-        ax.yaxis.set_minor_locator(MultipleLocator(1))
-        ax.grid(True)
-        ax.grid(which='minor', linestyle=':', linewidth=0.5)
         start = (-3, -3)
         end = (3, 3)
         x, y = bresenham_line(start, end, 6)
-        ax.scatter(x, y)
-        plt.show()
+        draw_helper(x, y)
 
     def test_slope_less_1(self):
-        fig, ax = plt.subplots()
-        ax.set_xlim(-10, 10)
-        ax.xaxis.set_major_locator(MultipleLocator(1))
-        ax.set_ylim(-10, 10)
-        ax.yaxis.set_major_locator(MultipleLocator(1))
-        ax.grid(True)
         start = (-3, -3)
         end = (3, -1)
         x, y = bresenham_line(start, end, 6)
-        ax.scatter(x, y)
-        plt.show()
+        draw_helper(x, y)
 
-
+def draw_helper(x, y):
+    fig, ax = plt.subplots()
+    ax.set_xlim(-10, 10)
+    ax.xaxis.set_major_locator(MultipleLocator(2))
+    ax.xaxis.set_minor_locator(MultipleLocator(1))
+    ax.set_ylim(-10, 10)
+    ax.yaxis.set_major_locator(MultipleLocator(2))
+    ax.yaxis.set_minor_locator(MultipleLocator(1))
+    ax.grid(which='minor', linestyle=':', linewidth=0.5)
+    ax.grid(True)
+    ax.scatter(x, y)
+    plt.show()
 
 
 if __name__ == '__main__':
