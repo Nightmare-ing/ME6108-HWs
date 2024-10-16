@@ -17,6 +17,3 @@ def get_input():
         except (SyntaxError, ValueError):
             print("Invalid input type")
             break
-
-
-

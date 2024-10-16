@@ -2,7 +2,7 @@ import unittest
 from unittest.mock import patch
 from io import StringIO
 
-from HW1.UI import get_input
+from HW1.ui import get_input
 
 
 class MyTestCase(unittest.TestCase):
