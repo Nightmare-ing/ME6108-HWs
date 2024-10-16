@@ -15,7 +15,8 @@ def get_input():
             else:
                 return start, end
         except (SyntaxError, ValueError):
-            print("Invalid input")
-        
+            print("Invalid input type")
+            break
+
 
 
