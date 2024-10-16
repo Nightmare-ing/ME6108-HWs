@@ -3,10 +3,11 @@ from matplotlib.ticker import MultipleLocator
 import unittest
 from unittest.mock import patch
 from io import StringIO
+import numpy.testing as npt
 
 import numpy as np
 
-from HW1.scanning_algorithms import bresenham_line
+from HW1.scanning_algorithms import bresenham_line_optimized, bresenham_line_standard
 from HW1.ui import get_input
 
 
@@ -38,14 +39,32 @@ class TestDrawing(unittest.TestCase):
     def test_slope1(self):
         start = (-3, -3)
         end = (3, 3)
-        x, y = bresenham_line(start, end, 6)
+        x, y = bresenham_line_standard(start, end, 6)
         draw_helper(x, y)
 
     def test_slope_less_1(self):
         start = (-3, -3)
         end = (3, -1)
-        x, y = bresenham_line(start, end, 6)
+        x, y = bresenham_line_standard(start, end, 6)
         draw_helper(x, y)
+
+
+class TestPixels(unittest.TestCase):
+    def test_slope1(self):
+        start = (-3, -3)
+        end = (3, 3)
+        expected_x, expected_y = bresenham_line_standard(start, end, 6)
+        actual_x, actual_y = bresenham_line_optimized(start, end, 6)
+        npt.assert_array_equal(expected_x, actual_x)
+        npt.assert_array_equal(expected_y, actual_y)
+
+    def test_slope_less_1(self):
+        start = (-3, -3)
+        end = (3, -1)
+        expected_x, expected_y = bresenham_line_standard(start, end, 6)
+        actual_x, actual_y = bresenham_line_optimized(start, end, 6)
+        npt.assert_array_equal(expected_x, actual_x)
+        npt.assert_array_equal(expected_y, actual_y)
 
 def draw_helper(x, y):
     fig, ax = plt.subplots()
