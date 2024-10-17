@@ -1,7 +1,9 @@
 import ast
-from matplotlib.ticker import MultipleLocator
+
 import matplotlib.patches as mpatches
 import matplotlib.pyplot as plt
+from matplotlib.ticker import MultipleLocator
+
 
 def get_input():
     """
@@ -22,22 +24,28 @@ def get_input():
             break
 
 
-def line_drawer(x, y):
-    fig, ax = plt.subplots()
-    ax.set_xlim(-10, 10)
-    ax.xaxis.set_major_locator(MultipleLocator(2))
-    ax.xaxis.set_minor_locator(MultipleLocator(1))
-    ax.set_ylim(-10, 10)
-    ax.yaxis.set_major_locator(MultipleLocator(2))
-    ax.yaxis.set_minor_locator(MultipleLocator(1))
-    ax.grid(which='minor', linestyle=':', linewidth=0.5)
-    ax.grid(True)
-    ax.set_aspect('equal')
-    ax.scatter(x, y)
-    return fig, ax
+class Drawer:
+    def __init__(self):
+        self.fig, self.ax = plt.subplots()
 
+    def set_fig(self, xlim=(-10, 10), ylim=(-10, 10), major_locator=2, minor_locator=1, grid=True, minor_grid=True,
+                aspect='equal'):
+        self.ax.set_xlim(xlim)
+        self.ax.xaxis.set_major_locator(MultipleLocator(major_locator))
+        self.ax.xaxis.set_minor_locator(MultipleLocator(minor_locator))
+        self.ax.set_ylim(ylim)
+        self.ax.yaxis.set_major_locator(MultipleLocator(major_locator))
+        self.ax.yaxis.set_minor_locator(MultipleLocator(minor_locator))
+        if grid:
+            self.ax.grid(which='major', linestyle='-', linewidth=0.5)
+        if minor_grid:
+            self.ax.grid(which='minor', linestyle=':', linewidth=0.5)
+        self.ax.set_aspect(aspect)
 
-def circle_drawer(x, y, center, radius):
-    fig, ax = line_drawer(x, y)
-    ax.add_patch(mpatches.Circle(center, radius, edgecolor='blue', facecolor='none', linewidth=1, linestyle=':'))
+    def line_drawer(self, x, y):
+        self.ax.scatter(x, y)
 
+    def circle_drawer(self, x, y, center, radius):
+        self.ax.scatter(x, y)
+        self.ax.add_patch(
+            mpatches.Circle(center, radius, edgecolor='blue', facecolor='none', linewidth=1, linestyle=':'))
