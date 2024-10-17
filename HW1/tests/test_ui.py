@@ -1,5 +1,6 @@
 import matplotlib.pyplot as plt
 from matplotlib.ticker import MultipleLocator
+import matplotlib.patches as mpatches
 import unittest
 from unittest.mock import patch
 from io import StringIO
@@ -57,7 +58,7 @@ class TestCircleDrawing(unittest.TestCase):
         center = (0, 0)
         radius = 5
         x, y = bresenham_circle(center, radius, 100)
-        draw_helper(x, y)
+        circle_draw_helper(x, y, center, radius)
 
 
 def draw_helper(x, y):
@@ -71,6 +72,22 @@ def draw_helper(x, y):
     ax.grid(which='minor', linestyle=':', linewidth=0.5)
     ax.grid(True)
     ax.scatter(x, y)
+    plt.show()
+
+
+def circle_draw_helper(x, y, center, radius):
+    fig, ax = plt.subplots()
+    ax.set_xlim(-10, 10)
+    ax.xaxis.set_major_locator(MultipleLocator(2))
+    ax.xaxis.set_minor_locator(MultipleLocator(1))
+    ax.set_ylim(-10, 10)
+    ax.yaxis.set_major_locator(MultipleLocator(2))
+    ax.yaxis.set_minor_locator(MultipleLocator(1))
+    ax.set_aspect('equal')
+    ax.grid(which='minor', linestyle=':', linewidth=0.5)
+    ax.grid(True)
+    ax.scatter(x, y)
+    ax.add_patch(mpatches.Circle(center, radius, edgecolor='blue', facecolor='none', linewidth=1, linestyle=':'))
     plt.show()
 
 
