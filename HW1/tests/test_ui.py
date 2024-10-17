@@ -47,6 +47,12 @@ class TestDrawing(unittest.TestCase):
         x, y = bresenham_line_standard(start, end, 6)
         draw_helper(x, y)
 
+    def test_slope_greater_1(self):
+        start = (-3, 3)
+        end = (3, 8)
+        x, y = bresenham_line_standard(start, end, 6)
+        draw_helper(x, y)
+
 
 def draw_helper(x, y):
     fig, ax = plt.subplots()
