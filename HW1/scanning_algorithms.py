@@ -1,5 +1,3 @@
-import math
-
 import numpy as np
 
 def bresenham_line_standard(start, end, subdivision):

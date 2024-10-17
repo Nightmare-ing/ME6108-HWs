@@ -4,7 +4,6 @@ import unittest
 from unittest.mock import patch
 from io import StringIO
 
-import numpy as np
 
 from HW1.scanning_algorithms import bresenham_line_optimized, bresenham_line_standard
 from HW1.ui import get_input

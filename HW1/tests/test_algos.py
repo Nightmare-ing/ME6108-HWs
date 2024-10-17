@@ -47,6 +47,7 @@ class TestPixels(unittest.TestCase):
                                                   number=10)
         elapsed_time_for_opt = timeit.timeit(lambda: bresenham_line_optimized(start, end, subdivisions),
                                              number=10)
+        print(f"For {subdivisions} interpolations:")
         print(f"Time used for standard scanning algorithm: {elapsed_time_for_standard:.4f} seconds")
         print(f"Time used for optimized parallel algorithm: {elapsed_time_for_opt:.4f} seconds")
 
