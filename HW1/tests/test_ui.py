@@ -33,7 +33,7 @@ class TestInput(unittest.TestCase):
         self.assertEqual(mock_stdout.getvalue().strip(), "Invalid input type")
 
 
-class TestDrawing(unittest.TestCase):
+class TestLineDrawing(unittest.TestCase):
     def test_slope1(self):
         start = (-3, -3)
         end = (3, 3)
