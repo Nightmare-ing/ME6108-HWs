@@ -1,5 +1,8 @@
 import matplotlib.patches as mpatches
 import matplotlib.pyplot as plt
+import matplotlib.animation as animation
+
+from HW1.utils import generate_rhombus, generate_trace
 
 WINDOW_WIDTH = 80
 WINDOW_HEIGHT = 60
@@ -38,13 +41,6 @@ def generate_rhombus(point1, point2):
     return [point1, point2, point3, point4]
 
 
-def generate_trace(rhombus_vertices):
-    """
-    generate discrete trace points for the given rhombus.
-    :param rhombus_vertices: coordinates of the vertices of the rhombus
-    :return: list of discrete trace points
-    """
-    
 
 if __name__ == '__main__':
     main()
