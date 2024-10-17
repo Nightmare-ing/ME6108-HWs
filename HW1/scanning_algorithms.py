@@ -52,12 +52,12 @@ def bresenham_circle(center, radius, subdivision):
     """
     x = center[0]
     y = center[1] + radius
-    pixel_x = []
-    pixel_y = []
+    pixel_x = np.array([])
+    pixel_y = np.array([])
     unit = float(radius) / float(subdivision)
     while y >= 0:
-        pixel_x.append(x)
-        pixel_y.append(y)
+        pixel_x = np.append(pixel_x, x)
+        pixel_y = np.append(pixel_y, y)
         delta_d = (x + unit)**2 + (y - unit)**2 - radius**2
         delta_dv = 2 * delta_d - 2 * unit * x - unit**2
         delta_hd = 2 * delta_d + 2 * unit * y - unit**2
@@ -77,6 +77,8 @@ def bresenham_circle(center, radius, subdivision):
         else:
             x = x + unit
             y = y - unit
+    pixel_x = np.concatenate((pixel_x, pixel_x, -pixel_x, -pixel_x))
+    pixel_y = np.concatenate((pixel_y, -pixel_y, -pixel_y, pixel_y))
     return pixel_x, pixel_y
 
 
