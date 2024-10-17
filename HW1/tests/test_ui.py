@@ -1,5 +1,3 @@
-from math import radians
-
 import matplotlib.pyplot as plt
 from matplotlib.ticker import MultipleLocator
 import matplotlib.patches as mpatches
