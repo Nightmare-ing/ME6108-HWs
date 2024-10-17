@@ -52,27 +52,31 @@ def bresenham_circle(center, radius, subdivision):
     """
     x = center[0]
     y = center[1] + radius
-    pixel_x = np.zeros(subdivision + 1)
-    pixel_y = np.zeros(subdivision + 1)
-    unit = radius / subdivision
-    for i in range(subdivision + 1):
-        pixel_x[i] = x
-        pixel_y[i] = y
-        delta_d = (x + 1)**2 + (y - 1)**2 - radius**2
-        delta_dv = 2 * (delta_d - x) - 1
-        delta_hd = 2 * delta_d + 2 * y - 1
+    pixel_x = []
+    pixel_y = []
+    unit = float(radius) / float(subdivision)
+    while y >= 0:
+        pixel_x.append(x)
+        pixel_y.append(y)
+        delta_d = (x + unit)**2 + (y - unit)**2 - radius**2
+        delta_dv = 2 * delta_d - 2 * unit * x - unit**2
+        delta_hd = 2 * delta_d + 2 * unit * y - unit**2
         if delta_d > 0:
             if delta_dv > 0:
+                x = x
                 y = y - unit
             else:
-                x = x + 1
-                y = y - 1
-        else:
+                x = x + unit
+                y = y - unit
+        elif delta_d < 0:
             if delta_hd > 0:
-                x = x + 1
-                y = y - 1
+                x = x + unit
+                y = y - unit
             else:
-                x = x + 1
+                x = x + unit
+        else:
+            x = x + unit
+            y = y - unit
     return pixel_x, pixel_y
 
 
@@ -100,8 +104,8 @@ def standard_helper(subdivision, start, k, unit):
             # when move up for one pixel, should also compare with another
             # 0.5, but now the position is "negative", so it's e - 1
             e = e - 1
-
     return pixel_x, pixel_y
+
 
 def optimized_helper(subdivision, start, end, k):
     """
