@@ -1,16 +1,44 @@
 import math
 
+import matplotlib.animation as animation
 import matplotlib.patches as mpatches
 import matplotlib.pyplot as plt
-import matplotlib.animation as animation
 
 from HW1.utils import generate_rhombus, generate_trace
+
+
+def update(frame):
+    """
+    For updating each frame of the animation
+    :param frame: represent which frame
+    :return: updated Artiest objects
+    """
+    global ball
+    ball.set_center((trace_x[frame % trace_x.size],
+                     trace_y[frame % trace_y.size]))
+
+
+def press(event):
+    """
+    For handling key press event
+    :param event:  object transferred in
+    :return: None
+    """
+    global animation_paused
+    if event.key is not None:
+        if animation_paused:
+            ani.event_source.start()
+        else:
+            ani.event_source.stop()
+        animation_paused = not animation_paused
+
 
 WINDOW_WIDTH = 200
 WINDOW_HEIGHT = 150
 MARGIN = 15
 RADIUS = 6
 
+animation_paused = False
 rec_start = (MARGIN, MARGIN)
 rec_width = float(WINDOW_WIDTH - 2 * MARGIN)
 rec_height = float(WINDOW_HEIGHT - 2 * MARGIN)
@@ -28,25 +56,13 @@ ax.add_patch(mpatches.Rectangle(rec_start, rec_width, rec_height, fc='none',
 ax.add_patch(mpatches.Polygon(edge_rhombus, closed=True,
                               edgecolor='blue', fc='none'))
 theta = math.atan((edge_rhombus[1][1] - edge_rhombus[0][1]) / (edge_rhombus[1][0] - edge_rhombus[0][0]))
-trace_rhombus = generate_rhombus((edge_rhombus[0][0] + RADIUS/math.sin(theta), edge_rhombus[0][1]),
-                                 (edge_rhombus[1][0], edge_rhombus[1][1] - RADIUS/math.cos(theta)))
+trace_rhombus = generate_rhombus((edge_rhombus[0][0] + RADIUS / math.sin(theta), edge_rhombus[0][1]),
+                                 (edge_rhombus[1][0], edge_rhombus[1][1] - RADIUS / math.cos(theta)))
 trace_x, trace_y = generate_trace(trace_rhombus)
 ball = ax.add_patch(mpatches.Circle((trace_x[0], trace_y[0]), RADIUS,
                                     color='red',
                                     fc='none'))
 
-
-def update(frame):
-    """
-    For updating each frame of the animation
-    :param frame: represent which frame
-    :return: updated Artiest objects
-    """
-    ball.set_center((trace_x[frame % trace_x.size],
-                     trace_y[frame % trace_y.size]))
-
-
-
-ani = animation.FuncAnimation(fig, update, interval=1, repeat=True)
+fig.canvas.mpl_connect('key_press_event', press)
+ani = animation.FuncAnimation(fig, update, frames=trace_x.size, interval=10, repeat=True)
 plt.show()
-
