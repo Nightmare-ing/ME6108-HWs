@@ -23,6 +23,22 @@ class TestPixels(unittest.TestCase):
         npt.assert_array_equal(expected_x, actual_x)
         npt.assert_array_equal(expected_y, actual_y)
 
+    def test_slope_greater_1_standard(self):
+        start = (-3, -3)
+        end = (-1, 3)
+        expected_y, expected_x = bresenham_line_standard(start, (end[1], end[0]), 6)
+        actual_x, actual_y = bresenham_line_standard(start, end, 6)
+        npt.assert_array_equal(expected_x, actual_x)
+        npt.assert_array_equal(expected_y, actual_y)
+
+    def test_slope_greater_1(self):
+        start = (-3, -3)
+        end = (-1, 3)
+        expected_x, expected_y = bresenham_line_standard(start, end, 6)
+        actual_x, actual_y = bresenham_line_optimized(start, end, 6)
+        npt.assert_array_equal(expected_x, actual_x)
+        npt.assert_array_equal(expected_y, actual_y)
+
     def test_performance(self):
         start = (-10, -10)
         end = (10, 5)
