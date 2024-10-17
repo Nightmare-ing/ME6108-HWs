@@ -5,7 +5,7 @@ from unittest.mock import patch
 from io import StringIO
 
 
-from HW1.scanning_algorithms import bresenham_line_optimized, bresenham_line_standard
+from HW1.scanning_algorithms import bresenham_line_optimized, bresenham_line_standard, bresenham_circle
 from HW1.ui import get_input
 
 
@@ -50,6 +50,13 @@ class TestLineDrawing(unittest.TestCase):
         start = (-3, -3)
         end = (-1, 3)
         x, y = bresenham_line_standard(start, end, 6)
+        draw_helper(x, y)
+
+class TestCircleDrawing(unittest.TestCase):
+    def test_origin(self):
+        center = (0, 0)
+        radius = 5
+        x, y = bresenham_circle(center, radius, 100)
         draw_helper(x, y)
 
 
