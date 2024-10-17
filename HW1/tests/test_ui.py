@@ -1,13 +1,11 @@
 import matplotlib.pyplot as plt
-from matplotlib.ticker import MultipleLocator
-import matplotlib.patches as mpatches
 import unittest
 from unittest.mock import patch
 from io import StringIO
 
 
 from HW1.scanning_algorithms import bresenham_line_optimized, bresenham_line_standard, bresenham_circle
-from HW1.ui import get_input
+from HW1.ui import get_input, line_drawer, circle_drawer
 
 
 class TestInput(unittest.TestCase):
@@ -39,21 +37,21 @@ class TestLineDrawing(unittest.TestCase):
         start = (-3, -3)
         end = (3, 3)
         x, y = bresenham_line_standard(start, end, 6)
-        draw_helper(x, y)
+        line_drawer(x, y)
         plt.show()
 
     def test_slope_less_1(self):
         start = (-3, -3)
         end = (3, -1)
         x, y = bresenham_line_standard(start, end, 6)
-        draw_helper(x, y)
+        line_drawer(x, y)
         plt.show()
 
     def test_slope_greater_1(self):
         start = (-3, -3)
         end = (-1, 3)
         x, y = bresenham_line_standard(start, end, 6)
-        draw_helper(x, y)
+        line_drawer(x, y)
         plt.show()
 
 class TestCircleDrawing(unittest.TestCase):
@@ -61,36 +59,17 @@ class TestCircleDrawing(unittest.TestCase):
         center = (0, 0)
         radius = 5
         x, y = bresenham_circle(center, radius, 10)
-        circle_draw_helper(x, y, center, radius)
+        circle_drawer(x, y, center, radius)
         plt.show()
 
     def test_not_origin(self):
         center = (3, 3)
         radius = 5
         x, y = bresenham_circle(center, radius, 10)
-        circle_draw_helper(x, y, center, radius)
+        circle_drawer(x, y, center, radius)
         plt.show()
 
 
-
-def draw_helper(x, y):
-    fig, ax = plt.subplots()
-    ax.set_xlim(-10, 10)
-    ax.xaxis.set_major_locator(MultipleLocator(2))
-    ax.xaxis.set_minor_locator(MultipleLocator(1))
-    ax.set_ylim(-10, 10)
-    ax.yaxis.set_major_locator(MultipleLocator(2))
-    ax.yaxis.set_minor_locator(MultipleLocator(1))
-    ax.grid(which='minor', linestyle=':', linewidth=0.5)
-    ax.grid(True)
-    ax.set_aspect('equal')
-    ax.scatter(x, y)
-    return fig, ax
-
-
-def circle_draw_helper(x, y, center, radius):
-    fig, ax = draw_helper(x, y)
-    ax.add_patch(mpatches.Circle(center, radius, edgecolor='blue', facecolor='none', linewidth=1, linestyle=':'))
 
 
 if __name__ == '__main__':
