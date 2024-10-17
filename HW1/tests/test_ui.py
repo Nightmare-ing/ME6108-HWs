@@ -1,3 +1,5 @@
+from math import radians
+
 import matplotlib.pyplot as plt
 from matplotlib.ticker import MultipleLocator
 import matplotlib.patches as mpatches
@@ -63,6 +65,14 @@ class TestCircleDrawing(unittest.TestCase):
         x, y = bresenham_circle(center, radius, 10)
         circle_draw_helper(x, y, center, radius)
         plt.show()
+
+    def test_not_origin(self):
+        center = (3, 3)
+        radius = 5
+        x, y = bresenham_circle(center, radius, 10)
+        circle_draw_helper(x, y, center, radius)
+        plt.show()
+
 
 
 def draw_helper(x, y):
