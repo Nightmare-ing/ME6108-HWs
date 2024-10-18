@@ -19,7 +19,7 @@ the performance of those two algorithms.
 
 I didn't implement the optimized algorithm for scanning a circle.
 
-> [!Attention]
+> **ATTENTION**
 > 
 > I didn't implement the complete algorithm for supporting lines with all 
 > kinds of slopes, especially for the slope less than 0. I just implemented 
