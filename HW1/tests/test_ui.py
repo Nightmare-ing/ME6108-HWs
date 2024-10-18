@@ -5,7 +5,9 @@ from io import StringIO
 
 
 from HW1.scanning_algorithms import bresenham_line_optimized, bresenham_line_standard, bresenham_circle
-from HW1.ui import get_input, line_drawer, circle_drawer
+from HW1.ui import get_input, Drawer
+
+drawer = Drawer()
 
 
 class TestInput(unittest.TestCase):
@@ -37,21 +39,24 @@ class TestLineDrawing(unittest.TestCase):
         start = (-3, -3)
         end = (3, 3)
         x, y = bresenham_line_standard(start, end, 6)
-        line_drawer(x, y)
+        drawer.set_fig()
+        drawer.line_drawer(x, y)
         plt.show()
 
     def test_slope_less_1(self):
         start = (-3, -3)
         end = (3, -1)
         x, y = bresenham_line_standard(start, end, 6)
-        line_drawer(x, y)
+        drawer.set_fig()
+        drawer.line_drawer(x, y)
         plt.show()
 
     def test_slope_greater_1(self):
         start = (-3, -3)
         end = (-1, 3)
         x, y = bresenham_line_standard(start, end, 6)
-        line_drawer(x, y)
+        drawer.set_fig()
+        drawer.line_drawer(x, y)
         plt.show()
 
 class TestCircleDrawing(unittest.TestCase):
@@ -59,14 +64,16 @@ class TestCircleDrawing(unittest.TestCase):
         center = (0, 0)
         radius = 5
         x, y = bresenham_circle(center, radius, 10)
-        circle_drawer(x, y, center, radius)
+        drawer.set_fig()
+        drawer.circle_drawer(x, y, center, radius)
         plt.show()
 
     def test_not_origin(self):
         center = (3, 3)
         radius = 5
         x, y = bresenham_circle(center, radius, 10)
-        circle_drawer(x, y, center, radius)
+        TestCircleDrawing.drawer.set_fig()
+        TestCircleDrawing.drawer.circle_drawer(x, y, center, radius)
         plt.show()
 
 
