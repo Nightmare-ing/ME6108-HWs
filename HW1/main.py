@@ -12,6 +12,9 @@ def main():
     problem = input("Please input 1 for problem 1 or 2 for problem 2: ")
     if problem == '1':
         print("You choose problem 1...")
+        print("!!!ATTENTION!!!: if you want to show line, only support line "
+              "with "
+              "positive slope")
         line_or_circle = input("Do you want to draw a line or a circle? "
                                "Enter 1 for line, 2 for circle: ")
         subdivision = input("If you want to set subdivision to see the "
