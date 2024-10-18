@@ -5,7 +5,7 @@ import matplotlib.pyplot as plt
 from matplotlib.ticker import MultipleLocator
 
 
-def get_input():
+def get_input_line():
     """
     Get input coordinates, expect two tuples with form (1, 2) (1, 2)
     """
@@ -23,6 +23,24 @@ def get_input():
             print("Invalid input type")
             break
 
+
+def get_input_circle():
+    """
+    Get input coordinates, expect a tuple and an integer with form (1, 2) 1
+    """
+    while True:
+        input_center = input("Enter the coordinate of the center, for example (1, 2): ")
+        input_radius = input("Enter the radius of the circle, for example 1: ")
+        try:
+            center = ast.literal_eval(input_center)
+            radius = int(input_radius)
+            if not isinstance(center, tuple) or not isinstance(radius, int):
+                print("Coordinates entered is not valid, please try again.")
+            else:
+                return center, radius
+        except (SyntaxError, ValueError):
+            print("Invalid input type")
+            break
 
 class Drawer:
     def __init__(self):

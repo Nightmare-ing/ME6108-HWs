@@ -5,7 +5,7 @@ from io import StringIO
 
 
 from HW1.scanning_algorithms import bresenham_line_optimized, bresenham_line_standard, bresenham_circle
-from HW1.ui import get_input, Drawer
+from HW1.ui import Drawer, get_input_line, get_input_circle
 
 _drawer = Drawer()
 
@@ -13,14 +13,14 @@ _drawer = Drawer()
 class TestInput(unittest.TestCase):
     @patch('builtins.input', side_effect=['(1, 2)', '(3, 4)'])
     def test_right_user_keyboard_input(self, mock_input):
-        start, end = get_input()
+        start, end = get_input_line()
         self.assertEqual(start, (1, 2))  # add assertion here
         self.assertEqual(end, (3, 4))
 
     @patch('builtins.input', side_effect=['1', '2', '(1, 2)', '(3, 4)'])
     @patch('sys.stdout', new_callable=StringIO)
     def test_tried_again_user_keyboard_input(self, mock_stdout, mock_input):
-        start, end = get_input()
+        start, end = get_input_line()
         self.assertEqual(mock_stdout.getvalue().strip(), "Coordinates "
                                                          "entered is not "
                                                          "valid, please try again.")
@@ -30,8 +30,14 @@ class TestInput(unittest.TestCase):
     @patch('builtins.input', side_effect=[1, 2])
     @patch('sys.stdout', new_callable=StringIO)
     def test_invalid_user_keyboard_input(self, mock_stdout, mock_input):
-        get_input()
+        get_input_line()
         self.assertEqual(mock_stdout.getvalue().strip(), "Invalid input type")
+
+    @patch('builtins.input', side_effect=['(1, 2)', '3'])
+    def test_valid_circle_keyboard_input(self, mock_input):
+        center, radius = get_input_circle()
+        self.assertEqual(center, (1, 2))
+        self.assertEqual(radius, 3)
 
 
 class TestLineDrawing(unittest.TestCase):
