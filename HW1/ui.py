@@ -48,6 +48,17 @@ class Drawer:
 
     def set_fig(self, xlim=(-10, 10), ylim=(-10, 10), major_locator=2, minor_locator=1, grid=True, minor_grid=True,
                 aspect='equal'):
+        """
+        Set the figure with xlim, ylim, major_locator, minor_locator, grid, minor_grid, aspect
+        :param xlim: x limit
+        :param ylim: y limit
+        :param major_locator: major locator for x and y axis
+        :param minor_locator: minor locator for x and y axis
+        :param grid: show grid or not
+        :param minor_grid: show minor grid or not
+        :param aspect: set aspect of the figure
+        :return:
+        """
         self.ax.set_xlim(xlim)
         self.ax.xaxis.set_major_locator(MultipleLocator(major_locator))
         self.ax.xaxis.set_minor_locator(MultipleLocator(minor_locator))
@@ -61,9 +72,20 @@ class Drawer:
         self.ax.set_aspect(aspect)
 
     def line_drawer(self, x, y):
+        """
+        Draw the line with x, y coordinates
+        """
         self.ax.scatter(x, y)
 
     def circle_drawer(self, x, y, center, radius):
+        """
+        Draw the circle with discrete points, also draw the desired circle
+        :param x: x coordinates of the discrete points, numpy array
+        :param y: y coordinates of the discrete points, numpy array
+        :param center: center of the circle
+        :param radius: radius of the circle
+        :return:
+        """
         self.ax.scatter(x, y)
         self.ax.add_patch(
             mpatches.Circle(center, radius, edgecolor='blue', facecolor='none', linewidth=1, linestyle=':'))

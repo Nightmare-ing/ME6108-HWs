@@ -27,11 +27,14 @@ def main():
                 x, y = bresenham_line_standard(start, end, int(subdivision))
             else:
                 x, y = bresenham_line_standard(start, end)
+
+            # Set the figure size
             xlim_left = min(start[0], end[0]) - 5
             xlim_right = max(start[0], end[0]) + 5
             ylim_down = min(start[1], end[1]) - 5
             ylim_up = max(start[1], end[1]) + 5
             drawer.set_fig((xlim_left, xlim_right), (ylim_down, ylim_up))
+
             drawer.line_drawer(x, y)
         elif line_or_circle == '2':
             print("You choose to draw a circle...")
