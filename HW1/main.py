@@ -1,7 +1,6 @@
-import math
+import subprocess
 
 import matplotlib.pyplot as plt
-from numpy.ma.core import minimum
 
 from HW1.scanning_algorithms import bresenham_line_standard, bresenham_circle
 from HW1.ui import Drawer, get_input_line, get_input_circle
@@ -44,6 +43,7 @@ def main():
         plt.show()
     elif problem == '2':
         print("You choose problem 2, run the animation")
+        subprocess.run(['python', 'animation.py'])
     else:
         print("Invalid input, please try again.")
         main()
