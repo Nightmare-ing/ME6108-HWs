@@ -33,3 +33,22 @@ script file.
 
 You can press any key to stop or continue the animation, but the **SPACE** 
 key is recommended.
+
+### Running
+
+I only implement the terminal UI, so you just run the `main.py`, and input as the terminal prompted.
+The demo is shown as following
+
+![Demo](HW1/demo/UI_demo.gif)
+
+An example with starting point $(6, 6)$ and $(20, 10)$ is shown as following:
+
+![Example](HW1/demo/demo_line.png)
+
+An example with center $(10, 10)$ and radius $5$ is shown as following:
+
+![Example](HW1/demo/demo_circle.png)
+
+A recording for Problem 2 is shown as following:
+
+![Recording](HW1/demo/demo_animation.gif)
