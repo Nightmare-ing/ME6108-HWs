@@ -1,14 +1,19 @@
 import math
 import unittest
 
+import matplotlib.pyplot as plt
 import numpy as np
 import numpy.testing as npt
 
+from HW2.drawer import Drawer
 from HW2.trivs import trivs
 
 
 class TestTrivs(unittest.TestCase):
     def test_one_point(self):
+        """
+        Test the transformation of one point in different views
+        """
         coors = np.array([[1, 2, 3, 1]])
         dist = 0
         front_trans_res = trivs(coors, dist, 'front profile', 0, 0)
@@ -28,6 +33,34 @@ class TestTrivs(unittest.TestCase):
                               -np.sin(theta) * np.sin(fi) - 2 * np.cos(theta) * np.sin(fi) + 3 * np.cos(fi),
                               1]])
         npt.assert_array_equal(expected, iso_trans_result)
+
+    def test_drawer(self):
+        coors = np.array([[0, 0],
+                          [0, 1],
+                          [1, 1],
+                          [1, 0],
+                          [0, 0]])
+        drawer = Drawer()
+        drawer.draw_connected_points(coors)
+        plt.show()
+
+    def test_three_view_fig(self):
+        drawer = Drawer()
+        coors = np.array([[0, 20, 15, 1],
+                          [0, 20, 0, 1],
+                          [30, 20, 0, 1],
+                          [0, 20, 15, 1],
+                          [0, 0, 15, 1],
+                          [30, 0, 0, 1],
+                          [30, 20, 0, 1]])
+        dist = 1
+        front_trans_res = trivs(coors, dist, 'front profile', 0, 0)
+        top_trans_res = trivs(coors, dist, 'top profile', 0, 0)
+        side_trans_res = trivs(coors, dist, 'side profile', 0, 0)
+        drawer.draw_connected_points(front_trans_res)
+        drawer.draw_connected_points(top_trans_res)
+        drawer.draw_connected_points(side_trans_res)
+        plt.show()
 
 
 if __name__ == '__main__':
