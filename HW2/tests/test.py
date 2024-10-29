@@ -1,4 +1,5 @@
 import math
+import csv
 import unittest
 
 import matplotlib.pyplot as plt
@@ -7,6 +8,7 @@ import numpy.testing as npt
 
 from HW2.drawer import Drawer
 from HW2.trivs import trivs
+from utils import read_csv
 
 
 class TestTrivs(unittest.TestCase):
@@ -77,6 +79,20 @@ class TestTrivs(unittest.TestCase):
         iso_trans_res = trivs(coors, dist, 'isometric', theta, fi)
         drawer.draw_connected_points(iso_trans_res)
         plt.show()
+
+
+class TestReadFile(unittest.TestCase):
+    def test_read_file(self):
+        expected_coors = np.array([[0, 20, 15, 1],
+                                   [0, 20, 0, 1],
+                                   [30, 20, 0, 1],
+                                   [0, 20, 15, 1],
+                                   [0, 0, 15, 1],
+                                   [30, 0, 0, 1],
+                                   [30, 20, 0, 1]])
+        actual_coors = read_csv('../data/data1.csv', 3)
+        npt.assert_array_equal(expected_coors, actual_coors)
+
 
 
 if __name__ == '__main__':

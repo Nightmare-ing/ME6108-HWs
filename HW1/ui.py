@@ -6,7 +6,7 @@ import matplotlib.patches as mpatches
 import matplotlib.pyplot as plt
 from matplotlib.ticker import MultipleLocator
 
-from HW1.utils import generate_rhombus, generate_trace
+from utils import generate_rhombus, generate_trace
 
 
 def get_input_line():

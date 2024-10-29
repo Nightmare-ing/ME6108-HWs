@@ -1,3 +1,5 @@
+import csv
+
 import numpy as np
 
 
@@ -30,3 +32,20 @@ def generate_trace(rhombus_vertices):
     return np.concatenate((left_up_x, right_up_x, right_down_x, left_down_x)), np.concatenate(
         (left_up_y, right_up_y, right_down_y, left_down_y))
 
+
+def read_csv(file_path, data_per_row):
+    """
+    Read the csv file and return the data as a numpy array
+    :param file_path: the path of the csv file
+    :param data_per_row: number of data in each row
+    :return: the data in the csv file, in the form of numpy array
+    """
+    with open(file_path, 'r') as f:
+        reader = csv.reader(f)
+        coors = []
+        for row in reader:
+            if len(row) != data_per_row:
+                raise ValueError('Invalid data format')
+            coors.append([float(i) for i in row] + [1.0])
+        coors = np.array(coors)
+    return coors
