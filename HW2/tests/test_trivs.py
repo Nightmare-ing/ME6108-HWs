@@ -4,7 +4,6 @@ import unittest
 import numpy as np
 import numpy.testing as npt
 
-from HW1.animation import theta
 from HW2.trivs import trivs
 
 
@@ -23,9 +22,13 @@ class TestTrivs(unittest.TestCase):
 
         theta = math.radians(45)
         fi = math.radians(35.264389682)
-        iso_trans_result = trivs(coors, dist, 'isometric', np.pi/4, 0)
+        iso_trans_result = trivs(coors, dist, 'isometric', theta, fi)
         expected = np.array([[np.cos(theta) - 2 * np.sin(theta),
                               0,
                               -np.sin(theta) * np.sin(fi) - 2 * np.cos(theta) * np.sin(fi) + 3 * np.cos(fi),
                               1]])
         npt.assert_array_equal(expected, iso_trans_result)
+
+
+if __name__ == '__main__':
+    unittest.main()
