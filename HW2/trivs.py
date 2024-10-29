@@ -1,7 +1,7 @@
 import numpy as np
 
 
-def trivs(coordinates, dist_of_view, which_view, theta, fi):
+def trivs(coordinates, which_view, theta, fi, dist_of_view=1):
     """
     Calculate the transformed coordinates of three views and isometric drawing
     for the given input points.
