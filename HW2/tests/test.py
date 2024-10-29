@@ -62,6 +62,22 @@ class TestTrivs(unittest.TestCase):
         drawer.draw_connected_points(side_trans_res)
         plt.show()
 
+    def test_isometric_fig(self):
+        drawer = Drawer()
+        coors = np.array([[0, 20, 15, 1],
+                          [0, 20, 0, 1],
+                          [30, 20, 0, 1],
+                          [0, 20, 15, 1],
+                          [0, 0, 15, 1],
+                          [30, 0, 0, 1],
+                          [30, 20, 0, 1]])
+        dist = 1
+        theta = math.radians(45)
+        fi = math.radians(35.264389682)
+        iso_trans_res = trivs(coors, dist, 'isometric', theta, fi)
+        drawer.draw_connected_points(iso_trans_res)
+        plt.show()
+
 
 if __name__ == '__main__':
     unittest.main()

@@ -4,7 +4,7 @@ import matplotlib.pyplot as plt
 class Drawer:
     def __init__(self):
         self.fig, self.ax = plt.subplots()
-        # invert the x axis
+        # invert the x-axis
         self.fig.gca().invert_xaxis()
 
     def draw_connected_points(self, coordinates):
