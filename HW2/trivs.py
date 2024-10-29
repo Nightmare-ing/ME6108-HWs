@@ -13,7 +13,12 @@ def trivs(coordinates, dist_of_view, which_view, theta, fi):
     :return: coordinates of transformed points in the specified view,
     in the form of np.arrays [[x1, y1], [x2, y2], ...]
     """
-    return np.dot(coordinates, get_trans_matrix(dist_of_view, which_view, theta, fi))
+    trans_coor = np.dot(coordinates, get_trans_matrix(dist_of_view,
+                                                      which_view,
+                                                      theta, fi))
+    x_col = trans_coor[:, 0].reshape(-1, 1)
+    z_col = trans_coor[:, 2].reshape(-1, 1)
+    return np.concatenate((x_col, z_col), axis=1)
 
 
 def get_trans_matrix(dist_of_view, which_view, theta, fi):
