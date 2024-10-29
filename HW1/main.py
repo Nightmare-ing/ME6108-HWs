@@ -3,14 +3,14 @@ import subprocess
 import matplotlib.pyplot as plt
 
 from HW1.scanning_algorithms import bresenham_line_standard, bresenham_circle
-from HW1.ui import Drawer, get_input_line, get_input_circle
+from HW1.ui import ScanningDrawer, get_input_line, get_input_circle, AnimationDrawer
 
 
 def main():
-    drawer = Drawer()
     print("This is the demo of my HW1, do you want to check problem 1 or problem 2?")
     problem = input("Please input 1 for problem 1 or 2 for problem 2: ")
     if problem == '1':
+        drawer = ScanningDrawer()
         print("You choose problem 1...")
         print("!!!ATTENTION!!!: if you want to show line, only support line "
               "with "
@@ -48,8 +48,11 @@ def main():
             drawer.circle_drawer(x, y, center, int(radius))
         plt.show()
     elif problem == '2':
+        animation_drawer = AnimationDrawer()
         print("You choose problem 2, run the animation")
-        subprocess.run(['python', 'animation.py'])
+        animation_drawer.set_fig()
+        animation_drawer.show_animation()
+        plt.show()
     else:
         print("Invalid input, please try again.")
         main()

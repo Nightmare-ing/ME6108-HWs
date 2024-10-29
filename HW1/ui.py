@@ -1,8 +1,12 @@
 import ast
+import math
 
+import matplotlib.animation as animation
 import matplotlib.patches as mpatches
 import matplotlib.pyplot as plt
 from matplotlib.ticker import MultipleLocator
+
+from HW1.utils import generate_rhombus, generate_trace
 
 
 def get_input_line():
@@ -42,7 +46,7 @@ def get_input_circle():
             print("Invalid input type")
             break
 
-class Drawer:
+class ScanningDrawer:
     def __init__(self):
         self.fig, self.ax = plt.subplots()
 
@@ -89,3 +93,74 @@ class Drawer:
         self.ax.scatter(x, y)
         self.ax.add_patch(
             mpatches.Circle(center, radius, edgecolor='blue', facecolor='none', linewidth=1, linestyle=':'))
+
+
+class AnimationDrawer:
+    def __init__(self, window_width=200, window_height=150, margin=15, radius=6):
+        self.fig, self.ax = plt.subplots()
+        self.ball = None
+        self.animation_paused = False
+        self.ani = None
+        self.trace_x = None
+        self.trace_y = None
+        self.window_width = window_width
+        self.window_height = window_height
+        self.margin = margin
+        self.radius = radius
+
+    def set_fig(self):
+        # Compute some parameters for the animation
+        rec_start = (self.margin, self.margin)
+        rec_width = float(self.window_width - 2 * self.margin)
+        rec_height = float(self.window_height - 2 * self.margin)
+        edge_rhombus = generate_rhombus((rec_start[0], rec_start[1] +
+                                         rec_height / 2.0), (rec_start[0] +
+                                                             rec_width / 2.0, rec_start[1] + rec_height))
+
+        self.ax.set_aspect('equal')
+        self.ax.set_xlim(0, self.window_width)
+        self.ax.set_ylim(0, self.window_height)
+
+        # Draw the rectangle and the rhombus
+        self.ax.add_patch(mpatches.Rectangle(rec_start, rec_width, rec_height, fc='none',
+                                        edgecolor='blue',
+                                        linewidth=1, linestyle='--'))
+        self.ax.add_patch(mpatches.Polygon(edge_rhombus, closed=True,
+                                      edgecolor='blue', fc='none'))
+
+        theta = math.atan((edge_rhombus[1][1] - edge_rhombus[0][1]) / (edge_rhombus[1][0] - edge_rhombus[0][0]))
+        trace_rhombus = generate_rhombus((edge_rhombus[0][0] + self.radius / math.sin(theta), edge_rhombus[0][1]),
+                                         (edge_rhombus[1][0], edge_rhombus[1][1] - self.radius / math.cos(theta)))
+        self.trace_x, self.trace_y = generate_trace(trace_rhombus)
+        self.ball = self.ax.add_patch(mpatches.Circle((self.trace_x[0], self.trace_y[0]), self.radius,
+                                            color='red',
+                                            fc='none'))
+
+    def update(self, frame):
+        """
+        For updating each frame of the animation
+        :param frame: represent which frame
+        :return: updated Artiest objects
+        """
+        self.ball.set_center((self.trace_x[frame % self.trace_x.size],
+                         self.trace_y[frame % self.trace_y.size]))
+
+    def press(self, event):
+        """
+        For handling key press event
+        :param event:  object transferred in
+        :return: None
+        """
+        if event.key is not None:
+            if self.animation_paused:
+                self.ani.event_source.start()
+            else:
+                self.ani.event_source.stop()
+            self.animation_paused = not self.animation_paused
+
+    def show_animation(self):
+        """
+        Show the animation of the ball moving along the trace
+        """
+        self.ani = animation.FuncAnimation(self.fig, self.update, frames=1000, interval=10, blit=False)
+        self.fig.canvas.mpl_connect('key_press_event', self.press)

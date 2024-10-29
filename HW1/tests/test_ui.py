@@ -5,10 +5,10 @@ from io import StringIO
 
 
 from HW1.scanning_algorithms import bresenham_line_optimized, bresenham_line_standard, bresenham_circle
-from HW1.ui import Drawer, get_input_line, get_input_circle
+from HW1.ui import ScanningDrawer, get_input_line, get_input_circle
 
 # Create a drawer object for drawing test classes
-_drawer = Drawer()
+_drawer = ScanningDrawer()
 
 
 class TestInput(unittest.TestCase):
