@@ -80,3 +80,23 @@ The Three View of the `data2.csv` is shown as following:
 The Isometric View of the `data2.csv` is shown as following:
 
 ![Isometric View of data2](HW2/demo/data2_iso.png)
+
+## Homework 3
+
+HW3 requires to draw the Mandelbrot Set. I use python script to implement this.
+First mesh the drawing region to a grid, and then calculate the Mandelbrot Set for each grid point.
+You can change the parameters in the `HW3.py` file to draw different Mandelbrot Set.
+The color based on the number of iterations within $\norm{z_n} <= 2$, and I also write a function to normalize this 
+number to RGB color value.
+
+Some examples are shown as following:
+
+![figure 1.png](HW3/demo/figure%201.png)
+
+![figure 2.png](HW3/demo/figure%202.png)
+
+![figure 3.png](HW3/demo/figure%203.png)
+
+![figure 4.png](HW3/demo/figure%204.png)
+
+![figure 5.png](HW3/demo/figure%205.png)
