@@ -56,9 +56,11 @@ A recording for Problem 2 is shown as following:
 ## Homework 2
 
 Homework 2 requires to draw the Three View and the Isometric View of an object.
-The coordinates of the vertex of the object are given in the `data*.csv` file under the `data` directory.
+The coordinates of the vertex of the object are given in the `data*.
+csv` file under the `HW2/data` directory.
 
-Linear transformation algorithm is implemented in `trivs.py`, and the main script is in `main.py` for interacting with 
+Linear transformation algorithm is implemented in `HW2/trivs.py`, and the main 
+script is in `HW2/main.py` for interacting with 
 user input, and the `drawer.py` are for drawing the transformed figure.
 
 The demo of user interface is shown as following:
@@ -86,7 +88,9 @@ The Isometric View of the `data2.csv` is shown as following:
 HW3 requires to draw the Mandelbrot Set. I use python script to implement this.
 First mesh the drawing region to a grid, and then calculate the Mandelbrot Set for each grid point.
 You can change the parameters in the `HW3.py` file to draw different Mandelbrot Set.
-The color based on the number of iterations within $\norm{z_n} <= 2$, and I also write a function to normalize this 
+The color based on the number of iterations within $\lvert z_n \rvert <= 2$, 
+and I 
+also write a function to normalize this 
 number to RGB color value.
 
 Some examples are shown as following:
