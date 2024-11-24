@@ -38,7 +38,7 @@ class BezierCurve:
         Compute all the intermediate and the final points for generating the Bezier Curve
         """
         for i in range(self.n):
-            for j in range(i):
+            for j in range(self.n - i):
                 self.generate(i, j)
 
     def get_control_points(self):
