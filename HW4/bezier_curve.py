@@ -16,6 +16,7 @@ class BezierCurve:
         coordinates
         :param time_splits: num of splits of the time [0, 1]
         """
+        self.time_splits = time_splits
         self.n = control_points.shape[1]
         self.time_stamps = np.linspace(0, 1, time_splits, endpoint=True)
         self.computed_points = np.zeros((time_splits, self.n, self.n, 2))
