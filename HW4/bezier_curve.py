@@ -51,4 +51,18 @@ class BezierCurve:
                                  self.computed_points[0, 0]]
         return drawing_points
 
-    
+    def get_intermediate_points(self, time_stamp):
+        """
+        Return the intermediate points Artists at the given time stamp,
+        because we should draw the animation of the intermediate points
+        :param time_stamp: time stamp for required intermediate points,
+        range from 0 to time_splits
+        :return: intermediate points Artists along the time axis
+        """
+        drawing_points = []
+        for i in range(1, self.n):
+            for j in range(self.n - i):
+                drawing_points.append(
+                    Circle(self.computed_points[time_stamp, i, j].tolist(),0.1))
+        return drawing_points
+
