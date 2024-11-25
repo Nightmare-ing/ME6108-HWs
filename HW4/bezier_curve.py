@@ -17,9 +17,9 @@ class BezierCurve:
         :param time_splits: num of splits of the time [0, 1]
         """
         self.time_splits = time_splits
-        self.n = control_points.shape[1]
-        self.data = np.zeros((self.time_splits, self.n, self.n, 2))
-        self.time_stamps = np.linspace(0, 1, time_splits, endpoint=True)
+        self.n = control_points.shape[0]
+        self.computed_points = np.zeros((self.time_splits, self.n, self.n, 2))
+        self.time_stamps = np.linspace(0, 1, time_splits, endpoint=True).reshape(time_splits, 1)
         self.computed_points[:, 0] = np.tile(control_points,
                                           (time_splits, 1, 1))
 
@@ -27,6 +27,10 @@ class BezierCurve:
         self.control_line_artists = None
         self.intermediate_line_artists = None
         self.trajectory_artists = None
+
+        for i in range(1, self.n):
+            for j in range(self.n - i):
+                self.computed_points[:, i, j] = self.generate(i, j)
 
     def generate(self, i, j):
         """
@@ -37,13 +41,6 @@ class BezierCurve:
         result = (((1 - self.time_stamps) * self.computed_points[:, i - 1, j])
                   - self.time_stamps * self.computed_points[:, i - 1, j + 1])
         return result
-
-    @property
-    def computed_points(self):
-        for i in range(self.n):
-            for j in range(self.n - i):
-                self.data[:, i, j] = self.generate(i, j)
-        return self.data
 
     @property
     def control_points(self):
@@ -85,7 +82,7 @@ class BezierCurve:
                                           for layer in
                                           self.computed_points[1, :-1]]
         self.trajectory_artists = Line2D(self.computed_points[0, self.n - 1,
-        0, 0], self.computed_points[0, self.n - 1, 0, 1])
+        0, 0:1], self.computed_points[0, self.n - 1, 0, 1:2])
         return ([self.control_line_artists] + self.intermediate_line_artists
                 + [self.trajectory_artists])
 
@@ -99,8 +96,8 @@ class BezierCurve:
         # update intermediate lines
         for line_index in range(len(self.intermediate_line_artists)):
             self.intermediate_line_artists[line_index].set_data(
-                self.computed_points[frame, line_index])
+                self.computed_points[frame, line_index].T)
 
-        self.trajectory_artists.set_data(self.computed_points[frame, self.n - 1, 0])
+        self.trajectory_artists.set_data(self.computed_points[0:frame, self.n - 1, 0].T)
 
         return self.intermediate_line_artists + [self.trajectory_artists]

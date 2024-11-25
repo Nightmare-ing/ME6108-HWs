@@ -11,8 +11,7 @@ def main():
 
     curve = BezierCurve(coors)
     fig, ax = plt.subplots()
-    ax.add_patch(curve.initialize_artists())
-    ani = animation.FuncAnimation(fig, curve.update, frames=curve.time_splits, init_func=curve.initialize_artists(), blit=True)
+    ani = animation.FuncAnimation(fig, curve.update, frames=curve.time_splits, init_func=curve.initialize_artists)
     plt.show()
 
 
