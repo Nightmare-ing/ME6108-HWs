@@ -32,11 +32,11 @@ class BezierCurve:
 
         for i in range(1, self.n):
             for j in range(self.n - i):
-                self.computed_points[:, i, j] = self.generate(i, j)
+                self.computed_points[:, i, j] = self._compute_at(i, j)
 
-    def generate(self, i, j):
+    def _compute_at(self, i, j):
         """
-        Generate the point in layer `i`, index `j`
+        Compute the point in layer `i`, index `j`
         :param i: layer `i` in recursion
         :param j: `j`th point
         """
@@ -45,7 +45,7 @@ class BezierCurve:
         return result
 
     @property
-    def control_points(self):
+    def _control_points(self):
         """
         Retrieve the data for control points
         :return: Position of the control points, in the form of n x 2 np
@@ -54,7 +54,7 @@ class BezierCurve:
         return self.computed_points[0, 0]
 
     @property
-    def trajectory(self):
+    def _trajectory(self):
         """
         Retrieve the data for the trajectory
         :return: Position of the trajectory, in the form of time_splits x 2
@@ -78,7 +78,7 @@ class BezierCurve:
         """
         self.control_line_artists = Line2D(self.computed_points[0, 0, :, 0],
                                            self.computed_points[0, 0, :, 1],
-                                           marker='o', color='red',
+                                           marker='o', color='green',
                                            linewidth=2)
         self.intermediate_line_artists = [Line2D(layer[:self.n - index - 1, 0], layer[:self.n - index - 1, 1],
                                                  marker='.', color='blue')
@@ -87,7 +87,7 @@ class BezierCurve:
         self.trajectory_artists = Line2D(self.computed_points[0, self.n - 1,
                                          0, 0:1], self.computed_points[0,
                                                   self.n - 1, 0, 1:2],
-                                         color='green')
+                                         color='red', linewidth=3)
         artists = ([self.control_line_artists] + self.intermediate_line_artists
                    + [self.trajectory_artists])
         for artist in artists:
@@ -106,6 +106,6 @@ class BezierCurve:
             self.intermediate_line_artists[line_index].set_data(
                 self.computed_points[frame, line_index + 1, :self.n - line_index - 1].T)
 
+        # update trajectory line
         self.trajectory_artists.set_data(self.computed_points[0:frame, self.n - 1, 0].T)
-
         return [self.control_line_artists] + self.intermediate_line_artists + [self.trajectory_artists]
