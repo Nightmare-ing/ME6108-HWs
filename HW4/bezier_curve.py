@@ -1,8 +1,9 @@
+import matplotlib.pyplot as plt
 import numpy as np
 from matplotlib.lines import Line2D
 
 class BezierCurve:
-    def __init__(self, control_points: np.ndarray, time_splits=100):
+    def __init__(self, ax, control_points: np.ndarray, time_splits=100):
         """
         Initialize a BezierCurve class, draw the curve with the Casteljau
         algorithm, store all the intermediate computed points to
@@ -16,6 +17,7 @@ class BezierCurve:
         coordinates
         :param time_splits: num of splits of the time [0, 1]
         """
+        self.ax = ax
         self.time_splits = time_splits
         self.n = control_points.shape[0]
         self.computed_points = np.zeros((self.time_splits, self.n, self.n, 2))
@@ -74,17 +76,23 @@ class BezierCurve:
         """
         Initialize the drawing Artists
         """
+        norm = plt.Normalize(0, self.n - 1)
+        cmap = plt.colormaps['viridis']
+
         self.control_line_artists = Line2D(self.computed_points[0, 0, :, 0],
                                            self.computed_points[0, 0, :, 1],
-                                           marker='o')
-        self.intermediate_line_artists = [Line2D(layer[:, 0], layer[:, 1],
-                                                 marker='.')
-                                          for layer in
-                                          self.computed_points[1, :-1]]
+                                           marker='o', color=cmap(norm(0)), linewidth=2)
+        self.intermediate_line_artists = [Line2D(layer[:self.n - index - 1, 0], layer[:self.n - index - 1, 1],
+                                                 marker='.', color=cmap(norm(index)))
+                                          for index, layer in
+                                          enumerate(self.computed_points[0, 1:-1])]
         self.trajectory_artists = Line2D(self.computed_points[0, self.n - 1,
-        0, 0:1], self.computed_points[0, self.n - 1, 0, 1:2])
-        return ([self.control_line_artists] + self.intermediate_line_artists
+        0, 0:1], self.computed_points[0, self.n - 1, 0, 1:2], color=cmap(norm(self.n - 1)))
+        artists = ([self.control_line_artists] + self.intermediate_line_artists
                 + [self.trajectory_artists])
+        for artist in artists:
+            self.ax.add_line(artist)
+        return artists
 
     def update(self, frame):
         """
