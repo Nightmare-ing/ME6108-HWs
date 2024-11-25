@@ -1,5 +1,4 @@
 import numpy as np
-from matplotlib.patches import Circle
 from matplotlib.lines import Line2D
 
 class BezierCurve:
@@ -19,8 +18,8 @@ class BezierCurve:
         """
         self.time_splits = time_splits
         self.n = control_points.shape[1]
+        self.data = np.zeros((self.time_splits, self.n, self.n, 2))
         self.time_stamps = np.linspace(0, 1, time_splits, endpoint=True)
-        self.computed_points = np.zeros((time_splits, self.n, self.n, 2))
         self.computed_points[:, 0] = np.tile(control_points,
                                           (time_splits, 1, 1))
 
@@ -35,18 +34,16 @@ class BezierCurve:
         :param i: layer `i` in recursion
         :param j: `j`th point
         """
-        self.computed_points[:, i, j] = (((1 - self.time_stamps) *
-                                      self.computed_points[:, i - 1, j])
-                                         - self.time_stamps *
-                                      self.computed_points[:, i - 1, j + 1])
+        result = (((1 - self.time_stamps) * self.computed_points[:, i - 1, j])
+                  - self.time_stamps * self.computed_points[:, i - 1, j + 1])
+        return result
 
-    def compute(self):
-        """
-        Compute all the intermediate and the final points for generating the Bezier Curve
-        """
+    @property
+    def computed_points(self):
         for i in range(self.n):
             for j in range(self.n - i):
-                self.generate(i, j)
+                self.data[:, i, j] = self.generate(i, j)
+        return self.data
 
     @property
     def control_points(self):
