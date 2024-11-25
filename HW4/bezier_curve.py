@@ -86,7 +86,7 @@ class BezierCurve:
         self.intermediate_line_artists = [Line2D(layer[:, 0], layer[:, 1],
                                                  marker='.')
                                           for layer in
-                                          self.computed_points[0]]
+                                          self.computed_points[1, :-1]]
         self.trajectory_artists = Line2D(self.computed_points[0, self.n - 1,
         0, 0], self.computed_points[0, self.n - 1, 0, 1])
         return ([self.control_line_artists] + self.intermediate_line_artists
