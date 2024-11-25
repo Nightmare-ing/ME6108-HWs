@@ -92,3 +92,18 @@ class BezierCurve:
         return ([self.control_line_artists] + self.intermediate_line_artists
                 + [self.trajectory_artists])
 
+    def update(self, frame):
+        """
+        Update the properties of the artists for each frame of the animation
+        :param frame: frame number of the animation, equal to the timestamp
+        of the evolution of the line
+        :return: updated Artists
+        """
+        # update intermediate lines
+        for line_index in range(len(self.intermediate_line_artists)):
+            self.intermediate_line_artists[line_index].set_data(
+                self.computed_points[frame, line_index])
+
+        self.trajectory_artists.set_data(self.computed_points[frame, self.n - 1, 0])
+
+        return self.intermediate_line_artists + [self.trajectory_artists]
