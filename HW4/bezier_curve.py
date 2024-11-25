@@ -73,7 +73,7 @@ class BezierCurve:
         """
         return self.computed_points[time_stamp]
 
-    def initialize_drawing(self):
+    def initialize_artists(self):
         """
         Initialize the drawing Artists
         """
