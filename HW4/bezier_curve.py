@@ -1,5 +1,6 @@
 import numpy as np
 from matplotlib.patches import Circle
+from matplotlib.lines import Line2D
 
 class BezierCurve:
     def __init__(self, control_points: np.ndarray, time_splits=100):
@@ -24,7 +25,7 @@ class BezierCurve:
                                           (time_splits, 1, 1))
 
         # properties for drawing
-        self.control_point_artists = None
+        self.control_line_artists = None
         self.intermediate_line_artists = None
         self.trajectory_artists = None
 
@@ -74,4 +75,20 @@ class BezierCurve:
         :return: intermediate points along the time axis
         """
         return self.computed_points[time_stamp]
+
+    def initialize_drawing(self):
+        """
+        Initialize the drawing Artists
+        """
+        self.control_line_artists = Line2D(self.computed_points[0, 0, :, 0],
+                                           self.computed_points[0, 0, :, 1],
+                                           marker='o')
+        self.intermediate_line_artists = [Line2D(layer[:, 0], layer[:, 1],
+                                                 marker='.')
+                                          for layer in
+                                          self.computed_points[0]]
+        self.trajectory_artists = Line2D(self.computed_points[0, self.n - 1,
+        0, 0], self.computed_points[0, self.n - 1, 0, 1])
+        return ([self.control_line_artists] + self.intermediate_line_artists
+                + [self.trajectory_artists])
 
