@@ -76,7 +76,7 @@ def read_data_prompt(hw):
     while True:
         file = input("Please choose the data file you want to test(data1.csv or "
                      "data2.csv): ")
-        file_path = os.path.join(os.getcwd(), 'data', file)
+        file_path = os.path.join(os.getcwd(), hw, 'data', file)
         if not os.path.exists(file_path):
             print("The file does not exist, please try again.")
         else:
