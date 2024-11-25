@@ -34,9 +34,20 @@ def generate_trace(rhombus_vertices):
         (left_up_y, right_up_y, right_down_y, left_down_y))
 
 
-def read_csv(file_path, data_per_row):
+def read_homogeneous_coor(file_path, data_per_row):
     """
-    Read the csv file and return the data as a numpy array
+    Read the csv file and return the homogeneous coordinates data as a
+    numpy array
+    :param file_path: the path of the csv file
+    :param data_per_row: number of data in each row
+    :return: the data in the csv file, in the form of numpy array
+    """
+    coors = read_coor(file_path, data_per_row)
+    return np.hstack((coors, np.ones((coors.shape[0], 1))))
+
+def read_coor(file_path, data_per_row):
+    """
+    Read the csv file and return the 2d coordinates data as a numpy array
     :param file_path: the path of the csv file
     :param data_per_row: number of data in each row
     :return: the data in the csv file, in the form of numpy array
@@ -47,7 +58,7 @@ def read_csv(file_path, data_per_row):
         for row in reader:
             if len(row) != data_per_row:
                 raise ValueError('Invalid data format')
-            coors.append([float(i) for i in row] + [1.0])
+            coors.append([float(i) for i in row])
         coors = np.array(coors)
     return coors
 

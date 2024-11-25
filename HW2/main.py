@@ -3,13 +3,13 @@ import os
 import matplotlib.pyplot as plt
 
 from HW2.drawer import Drawer
-from utils import read_csv, read_data_prompt
+from utils import read_homogeneous_coor, read_data_prompt
 
 
 def main():
     file_path = read_data_prompt("HW2")
     drawer = Drawer()
-    coors = read_csv(file_path, 3)
+    coors = read_homogeneous_coor(file_path, 3)
 
     while True:
         which_view = input("Which view do you want to draw? (1 for Three View or 2 for Isometric View): ")

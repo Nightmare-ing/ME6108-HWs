@@ -8,7 +8,7 @@ import numpy.testing as npt
 
 from HW2.drawer import Drawer
 from HW2.trivs import trivs
-from utils import read_csv
+from utils import read_homogeneous_coor
 
 
 class TestTrivs(unittest.TestCase):
@@ -78,7 +78,7 @@ class TestReadFile(unittest.TestCase):
                                    [0, 0, 15, 1],
                                    [30, 0, 0, 1],
                                    [30, 20, 0, 1]])
-        actual_coors = read_csv('../data/data1.csv', 3)
+        actual_coors = read_homogeneous_coor('../data/data1.csv', 3)
         npt.assert_array_equal(expected_coors, actual_coors)
 
 
