@@ -41,7 +41,7 @@ class BezierCurve:
         :param j: `j`th point
         """
         result = (((1 - self.time_stamps) * self.computed_points[:, i - 1, j])
-                  - self.time_stamps * self.computed_points[:, i - 1, j + 1])
+                  + self.time_stamps * self.computed_points[:, i - 1, j + 1])
         return result
 
     @property
