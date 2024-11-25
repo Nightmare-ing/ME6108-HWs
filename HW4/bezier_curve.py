@@ -1,6 +1,6 @@
-import matplotlib.pyplot as plt
 import numpy as np
 from matplotlib.lines import Line2D
+
 
 class BezierCurve:
     def __init__(self, ax, control_points: np.ndarray, time_splits=100):
@@ -23,7 +23,7 @@ class BezierCurve:
         self.computed_points = np.zeros((self.time_splits, self.n, self.n, 2))
         self.time_stamps = np.linspace(0, 1, time_splits, endpoint=True).reshape(time_splits, 1)
         self.computed_points[:, 0] = np.tile(control_points,
-                                          (time_splits, 1, 1))
+                                             (time_splits, 1, 1))
 
         # properties for drawing
         self.control_line_artists = None
@@ -76,20 +76,20 @@ class BezierCurve:
         """
         Initialize the drawing Artists
         """
-        norm = plt.Normalize(0, self.n - 1)
-        cmap = plt.colormaps['viridis']
-
         self.control_line_artists = Line2D(self.computed_points[0, 0, :, 0],
                                            self.computed_points[0, 0, :, 1],
-                                           marker='o', color=cmap(norm(0)), linewidth=2)
+                                           marker='o', color='red',
+                                           linewidth=2)
         self.intermediate_line_artists = [Line2D(layer[:self.n - index - 1, 0], layer[:self.n - index - 1, 1],
-                                                 marker='.', color=cmap(norm(index)))
+                                                 marker='.', color='blue')
                                           for index, layer in
                                           enumerate(self.computed_points[0, 1:-1])]
         self.trajectory_artists = Line2D(self.computed_points[0, self.n - 1,
-        0, 0:1], self.computed_points[0, self.n - 1, 0, 1:2], color=cmap(norm(self.n - 1)))
+                                         0, 0:1], self.computed_points[0,
+                                                  self.n - 1, 0, 1:2],
+                                         color='green')
         artists = ([self.control_line_artists] + self.intermediate_line_artists
-                + [self.trajectory_artists])
+                   + [self.trajectory_artists])
         for artist in artists:
             self.ax.add_line(artist)
         return artists
@@ -104,8 +104,8 @@ class BezierCurve:
         # update intermediate lines
         for line_index in range(len(self.intermediate_line_artists)):
             self.intermediate_line_artists[line_index].set_data(
-                self.computed_points[frame, line_index].T)
+                self.computed_points[frame, line_index + 1, :self.n - line_index - 1].T)
 
         self.trajectory_artists.set_data(self.computed_points[0:frame, self.n - 1, 0].T)
 
-        return self.intermediate_line_artists + [self.trajectory_artists]
+        return [self.control_line_artists] + self.intermediate_line_artists + [self.trajectory_artists]
