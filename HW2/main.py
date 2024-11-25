@@ -3,23 +3,11 @@ import os
 import matplotlib.pyplot as plt
 
 from HW2.drawer import Drawer
-from utils import read_csv
+from utils import read_csv, read_data_prompt
 
 
 def main():
-    print("This is the demo of my HW2, there are some sample files under "
-          "HW2/data, you can use them to test the program.")
-    print("Or you can put your own data file under HW2/data and test it.")
-    while True:
-        file = input("Please choose the data file you want to test(data1.csv or "
-                     "data2.csv): ")
-        file_path = os.path.join(os.getcwd(), 'data', file)
-        if not os.path.exists(file_path):
-            print("The file does not exist, please try again.")
-        else:
-            break
-
-    print("You choose to test the file: ", file)
+    file_path = read_data_prompt("HW2")
     drawer = Drawer()
     coors = read_csv(file_path, 3)
 

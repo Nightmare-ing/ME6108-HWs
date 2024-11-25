@@ -1,4 +1,5 @@
 import csv
+import os.path
 
 import numpy as np
 
@@ -49,3 +50,27 @@ def read_csv(file_path, data_per_row):
             coors.append([float(i) for i in row] + [1.0])
         coors = np.array(coors)
     return coors
+
+def read_data_prompt(hw):
+    """
+    Prompt when reading a test data file
+    :param hw: String for HWs, for example "HW1", "HW2", ...
+    :return: path of the file
+    """
+    print("This is the demo of my {}, there are some sample files under "
+          "{}/data, you can use them to test the program".format(hw, hw))
+    print("Or you can put your own data file under {}/data and test "
+          "them.".format(hw))
+
+    while True:
+        file = input("Please choose the data file you want to test(data1.csv or "
+                     "data2.csv): ")
+        file_path = os.path.join(os.getcwd(), 'data', file)
+        if not os.path.exists(file_path):
+            print("The file does not exist, please try again.")
+        else:
+            break
+
+    print("You choose to test the file: ", file)
+    return file_path
+
