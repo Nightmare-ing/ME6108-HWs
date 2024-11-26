@@ -3,7 +3,7 @@ from matplotlib.lines import Line2D
 
 
 class BSpline:
-    def __init__(self, ax, control_points: np.ndarray, k, time_splits=100):
+    def __init__(self, ax, control_points: np.ndarray, k, sect_time_splits=100):
         """
         Initialize a B-Spline class, draw the curve with the De Boor algorithm,
         store all the intermediate computed points to `computed_points`, which
@@ -13,27 +13,31 @@ class BSpline:
         the form of np array in two dimension, each row is a pair of
         coordinates
         :param k: order of the B-Spline
-        :param time_splits: num of splits of the time.
+        :param sect_time_splits: num of splits of the time.
         """
         self.ax = ax
-        self.time_splits = time_splits
-        self.sect_timestamps = np.linspace(0, 1, time_splits,
-                                           endpoint=True).reshape(time_splits, 1)
+        self.sect_time_splits = sect_time_splits
+        self.sect_timestamps = np.linspace(0, 1, sect_time_splits,
+                                           endpoint=True).reshape(sect_time_splits, 1)
 
         self.k = k
         # n + 1 control points
         self.n = control_points.shape[0] - 1
-        self.layers = np.arange(1, self.k + 1)
+        # values for l
+        self.ls = np.arange(1, self.k + 1)
+        # the nodes vector
         self.nodes = np.arange(self.k + self.n + 2)
-        self.js = np.arange(self.k, self.n + 1)
-        self.time_stamps_num = self.time_splits * self.js.size
+        # values for j, means the number of sections of the BSpline
+        self.js = [(index, item) for index, item in enumerate(range(self.k, self.n + 1))]
+        # total number of timestamps
+        self.time_stamps_num = self.sect_time_splits * len(self.js)
 
-        self.computed_points = np.zeros((self.js.size,
-                                         self.time_splits, self.layers.size + 1,
+        self.computed_points = np.zeros((len(self.js),
+                                         self.sect_time_splits, self.ls.size + 1,
                                          self.n + 1, 2))
         self.computed_points[:, :, 0] = np.tile(control_points,
-                                                (self.js.size,
-                                                 self.time_splits, 1, 1))
+                                                (len(self.js),
+                                                 self.sect_time_splits, 1, 1))
         self._compute_points()
 
         self.control_line_artists = None
@@ -41,38 +45,33 @@ class BSpline:
         self.trajectory_artists = None
 
 
-    def _compute_section_at(self, l, i, j):
+    def _compute_section_at(self, l, i, j_pack):
         """
         Compute the point `i` at layer `l`, between nodes `j` and `j + 1`,
         which is a section of the B Spline.
         :param l: Layer index
         :param i: Index of the point
-        :param j: Index of the node
-        :return Point coordinates at layer `l`, index `i`, between node `j`
-        and node `j + 1`, in the form of 2d array, the first array
-        represents the timestamps, the second array represents the x and y
-        coordinates of the point
+        :param j_pack: tuple, (section index, node index of j)
         """
         t_index = i + self.k - l + 1
-        section_index = j - self.js[0]
+        sect_index, j = j_pack
         t = self.sect_timestamps + j
         t_coeff = (self.nodes[t_index] - t) / (self.nodes[t_index] -
                                             self.nodes[i])
-        result = t_coeff * self.computed_points[section_index, :, l - 1, i - 1] + \
-                    (1 - t_coeff) * self.computed_points[section_index, :,
-                                    l - 1, i]
-        return result
+        self.computed_points[sect_index, :, l, i] = (t_coeff *
+                                                     self.computed_points[
+                                                     sect_index, :, l - 1, i - 1] +
+                                                     (1 - t_coeff) *
+                                                     self.computed_points[sect_index, :, l - 1, i])
 
     def _compute_points(self):
         """
         Compute all the points of the B-Spline in this 5d np array
         """
-        for j in self.js:
-            section_index = j - self.js[0]
+        for j_pack in self.js:
             for l in range(1, self.k + 1):
-                for i in range(max(j - self.k + l, 0), j + 1):
-                    self.computed_points[section_index, :, l, i] = (
-                        self._compute_section_at(l, i, j))
+                for i in range(max(j_pack[1] - self.k + l, 0), j_pack[1] + 1):
+                    self._compute_section_at(l, i, j_pack)
 
     @property
     def _control_points(self):
@@ -92,12 +91,11 @@ class BSpline:
         :return: Position of the trajectory, in the form of time_splits x 2
         np array
         """
-        result = np.zeros((self.js.size, self.time_splits, 2))
-        for j in self.js:
-            section_index = j - self.js[0]
-            result[section_index] = self.computed_points[section_index, :, 
-                                  self.layers[-1], j]
-        return result.reshape(self.js.size * self.time_splits, 2)
+        result = np.zeros((len(self.js), self.sect_time_splits, 2))
+        for sect_index, j in self.js:
+            result[sect_index] = self.computed_points[sect_index, :,
+                                  self.ls[-1], j]
+        return result.reshape(len(self.js) * self.sect_time_splits, 2)
 
     def get_intermediate_points(self, time_stamp):
         """
@@ -107,8 +105,8 @@ class BSpline:
         range from 0 to time_splits * (self.nodes.size - 1)
         :return: intermediate points along the time axis
         """
-        j_index = time_stamp // self.time_splits
-        return self.computed_points[j_index, time_stamp % self.time_splits]
+        sect_index = time_stamp // self.sect_time_splits
+        return self.computed_points[sect_index, time_stamp % self.sect_time_splits]
 
     def initialize_artists(self):
         """
@@ -120,13 +118,11 @@ class BSpline:
                 marker='o', color='green', linewidth=2)
         self.intermediate_line_artists = [Line2D(layer[0, 0:1], layer[0, 1:2],
                                                  marker='.', color='blue')
-                                          for index, layer in
-                                          enumerate(
-                                              self.get_intermediate_points(
-                                                  0)[1:-1])]
+                                          for layer in
+                                          self.get_intermediate_points(0)[1:-1]]
         self.trajectory_artists = Line2D(self._trajectory[0, 0:1],
                                          self._trajectory[0, 1:2],
-                                         color='red')
+                                         color='red', linewidth=3)
         artists = ([self.control_line_artists] + self.intermediate_line_artists
                    + [self.trajectory_artists])
         for artist in artists:
@@ -139,11 +135,12 @@ class BSpline:
         :param frame: frame index
         :return: updated artists
         """
-        j = self.js[frame // self.time_splits]
-        for layer in self.layers[:-1]:
-            i_lower_bound = j - self.k + layer
-            self.intermediate_line_artists[layer - 1].set_data(
-                self.get_intermediate_points(frame)[layer,
+        _, j = self.js[frame // self.sect_time_splits]
+        for l in self.ls[:-1]:
+            l_index = l - 1
+            i_lower_bound = j - self.k + l
+            self.intermediate_line_artists[l_index].set_data(
+                self.get_intermediate_points(frame)[l,
                 i_lower_bound:j+1].T)
         self.trajectory_artists.set_data(self._trajectory[0:frame].T)
         return [self.control_line_artists] + self.intermediate_line_artists + \
