@@ -54,12 +54,13 @@ class BSpline:
         coordinates of the point
         """
         t_index = i + self.k - l + 1
-        section_index = np.where(self.js == j)
+        section_index = j - self.js[0]
         t = self.sect_timestamps + j
         t_coeff = (self.nodes[t_index] - t) / (self.nodes[t_index] -
                                             self.nodes[i])
-        result = t_coeff * self.computed_points[section_index, :, i - 1, l - 1] + \
-                    (1 - t_coeff) * self.computed_points[section_index, :, i, l - 1]
+        result = t_coeff * self.computed_points[section_index, :, l - 1, i - 1] + \
+                    (1 - t_coeff) * self.computed_points[section_index, :,
+                                    l - 1, i]
         return result
 
     def _compute_points(self):
@@ -67,7 +68,7 @@ class BSpline:
         Compute all the points of the B-Spline in this 5d np array
         """
         for j in self.js:
-            section_index = np.where(self.js == j)
+            section_index = j - self.js[0]
             for l in range(1, self.k + 1):
                 for i in range(max(j - self.k + l, 0), j + 1):
                     self.computed_points[section_index, :, l, i] = (
@@ -93,7 +94,7 @@ class BSpline:
         """
         result = np.zeros((self.js.size, self.time_splits, 2))
         for j in self.js:
-            section_index = np.where(self.js == j)
+            section_index = j - self.js[0]
             result[section_index] = self.computed_points[section_index, :, 
                                   self.layers[-1], j]
         return result.reshape(self.js.size * self.time_splits, 2)

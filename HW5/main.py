@@ -18,7 +18,7 @@ def main():
     ani = animation.FuncAnimation(fig, curve.update,
                                     frames=curve.time_stamps_num,
                                     init_func=curve.initialize_artists,
-                                  interval=100, blit=True)
+                                  interval=10, blit=True)
     plt.show()
 
 if __name__ == '__main__':
