@@ -81,8 +81,10 @@ class BSpline:
         :return: Position of the trajectory, in the form of time_splits x 2
         np array
         """
-        return self.computed_points[:, :, self.l.size, self.j].reshape(
-            (self.nodes.size - 1) * self.time_splits, 2)
+        result = np.zeros((self.nodes.size - 1, self.time_splits, 2))
+        for j in range(self.nodes.size - 1):
+            result[j] = self.computed_points[j, :, self.l.size, j]
+        return result.reshape((self.nodes.size - 1) * self.time_splits, 2)
 
     def get_intermediate_points(self, time_stamp):
         """
