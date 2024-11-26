@@ -4,11 +4,11 @@ import matplotlib.animation as animation
 import numpy as np
 
 from HW5.b_spline import BSpline
-from utils import read_coor
+from utils import read_coor, read_data_prompt
 
 
 def main():
-    file_path = os.path.join(os.getcwd(), 'HW5/data/data1.csv')
+    file_path = read_data_prompt("HW5")
     coors = read_coor(file_path, 2)
 
     fig, ax = plt.subplots()
