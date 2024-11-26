@@ -14,13 +14,12 @@ def main():
     fig, ax = plt.subplots()
     ax.set_xlim(np.min(coors[:, 0]) - 0.5, np.max(coors[:, 0]) + 0.5)
     ax.set_ylim(np.min(coors[:, 1]) - 0.5, np.max(coors[:, 1]) + 0.5)
-    curve = BSpline(ax, coors, 100)
+    curve = BSpline(ax, coors, 3, 100)
     ani = animation.FuncAnimation(fig, curve.update,
-                                    frames=curve.time_splits,
+                                    frames=curve.time_stamps_num,
                                     init_func=curve.initialize_artists,
                                   interval=100, blit=True)
     plt.show()
 
 if __name__ == '__main__':
     main()
-    
