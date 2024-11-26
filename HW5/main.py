@@ -20,3 +20,7 @@ def main():
                                     init_func=curve.initialize_artists,
                                   interval=100, blit=True)
     plt.show()
+
+if __name__ == '__main__':
+    main()
+    
