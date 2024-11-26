@@ -76,17 +76,17 @@ class BezierCurve:
         """
         Initialize the drawing Artists
         """
-        self.control_line_artists = Line2D(self.computed_points[0, 0, :, 0],
-                                           self.computed_points[0, 0, :, 1],
+        self.control_line_artists = Line2D(self._control_points[:, 0],
+                                           self._control_points[:, 1],
                                            marker='o', color='green',
                                            linewidth=2)
-        self.intermediate_line_artists = [Line2D(layer[:self.n - index - 1, 0], layer[:self.n - index - 1, 1],
+        self.intermediate_line_artists = [Line2D(layer[0, 0:1],
+                                                 layer[0, 1:2],
                                                  marker='.', color='blue')
-                                          for index, layer in
-                                          enumerate(self.computed_points[0, 1:-1])]
-        self.trajectory_artists = Line2D(self.computed_points[0, self.n - 1,
-                                         0, 0:1], self.computed_points[0,
-                                                  self.n - 1, 0, 1:2],
+                                          for layer in
+                                          self.get_intermediate_points(0)[1:-1]]
+        self.trajectory_artists = Line2D(self._trajectory[0, 0:1],
+                                         self._trajectory[0, 1:2],
                                          color='red', linewidth=3)
         artists = ([self.control_line_artists] + self.intermediate_line_artists
                    + [self.trajectory_artists])
@@ -102,10 +102,11 @@ class BezierCurve:
         :return: updated Artists
         """
         # update intermediate lines
-        for line_index in range(len(self.intermediate_line_artists)):
-            self.intermediate_line_artists[line_index].set_data(
-                self.computed_points[frame, line_index + 1, :self.n - line_index - 1].T)
+        for l in range(1, self.n - 1):
+            l_index = l - 1
+            self.intermediate_line_artists[l_index].set_data(
+                self.get_intermediate_points(frame)[l][:self.n - l].T)
 
         # update trajectory line
-        self.trajectory_artists.set_data(self.computed_points[0:frame, self.n - 1, 0].T)
+        self.trajectory_artists.set_data(self._trajectory[:frame].T)
         return [self.control_line_artists] + self.intermediate_line_artists + [self.trajectory_artists]
