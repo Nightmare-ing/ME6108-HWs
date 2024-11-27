@@ -1,8 +1,10 @@
 import numpy as np
 from matplotlib.lines import Line2D
 
+from utils import Curve
 
-class BezierCurve:
+
+class BezierCurve(Curve):
     def __init__(self, ax, control_points: np.ndarray, time_splits=100):
         """
         Initialize a BezierCurve class, draw the curve with the Casteljau
@@ -17,18 +19,13 @@ class BezierCurve:
         coordinates
         :param time_splits: num of splits of the time [0, 1]
         """
-        self.ax = ax
+        super().__init__(ax)
         self.time_splits = time_splits
         self.n = control_points.shape[0]
         self.computed_points = np.zeros((self.time_splits, self.n, self.n, 2))
         self.time_stamps = np.linspace(0, 1, time_splits, endpoint=True).reshape(time_splits, 1)
         self.computed_points[:, 0] = np.tile(control_points,
                                              (time_splits, 1, 1))
-
-        # properties for drawing
-        self.control_line_artists = None
-        self.intermediate_line_artists = None
-        self.trajectory_artists = None
 
         for i in range(1, self.n):
             for j in range(self.n - i):
@@ -71,42 +68,3 @@ class BezierCurve:
         :return: intermediate points along the time axis
         """
         return self.computed_points[time_stamp]
-
-    def initialize_artists(self):
-        """
-        Initialize the drawing Artists
-        """
-        self.control_line_artists = Line2D(self._control_points[:, 0],
-                                           self._control_points[:, 1],
-                                           marker='o', color='green',
-                                           linewidth=2)
-        self.intermediate_line_artists = [Line2D(layer[0, 0:1],
-                                                 layer[0, 1:2],
-                                                 marker='.', color='blue')
-                                          for layer in
-                                          self.get_intermediate_points(0)[1:-1]]
-        self.trajectory_artists = Line2D(self._trajectory[0, 0:1],
-                                         self._trajectory[0, 1:2],
-                                         color='red', linewidth=3)
-        artists = ([self.control_line_artists] + self.intermediate_line_artists
-                   + [self.trajectory_artists])
-        for artist in artists:
-            self.ax.add_line(artist)
-        return artists
-
-    def update(self, frame):
-        """
-        Update the properties of the artists for each frame of the animation
-        :param frame: frame number of the animation, equal to the timestamp
-        of the evolution of the line
-        :return: updated Artists
-        """
-        # update intermediate lines
-        for l in range(1, self.n - 1):
-            l_index = l - 1
-            self.intermediate_line_artists[l_index].set_data(
-                self.get_intermediate_points(frame)[l][:self.n - l].T)
-
-        # update trajectory line
-        self.trajectory_artists.set_data(self._trajectory[:frame].T)
-        return [self.control_line_artists] + self.intermediate_line_artists + [self.trajectory_artists]

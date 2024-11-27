@@ -1,8 +1,10 @@
 import numpy as np
 from matplotlib.lines import Line2D
 
+from utils import Curve
 
-class BSpline:
+
+class BSpline(Curve):
     def __init__(self, ax, control_points: np.ndarray, k, sect_time_splits=100):
         """
         Initialize a B-Spline class, draw the curve with the De Boor algorithm,
@@ -15,7 +17,7 @@ class BSpline:
         :param k: order of the B-Spline
         :param sect_time_splits: num of splits of the time.
         """
-        self.ax = ax
+        super().__init__(ax)
         self.sect_time_splits = sect_time_splits
         self.sect_timestamps = np.linspace(0, 1, sect_time_splits,
                                            endpoint=True).reshape(sect_time_splits, 1)
@@ -39,11 +41,6 @@ class BSpline:
                                                 (len(self.js),
                                                  self.sect_time_splits, 1, 1))
         self._compute_points()
-
-        self.control_line_artists = None
-        self.intermediate_line_artists = None
-        self.trajectory_artists = None
-
 
     def _compute_section_at(self, l, i, j_pack):
         """
@@ -107,27 +104,6 @@ class BSpline:
         """
         sect_index = time_stamp // self.sect_time_splits
         return self.computed_points[sect_index, time_stamp % self.sect_time_splits]
-
-    def initialize_artists(self):
-        """
-        Initialize the artists for the animation
-        :return: artists for the animation
-        """
-        self.control_line_artists = Line2D(self._control_points[:, 0],
-                                           self._control_points[:, 1],
-                marker='o', color='green', linewidth=2)
-        self.intermediate_line_artists = [Line2D(layer[0, 0:1], layer[0, 1:2],
-                                                 marker='.', color='blue')
-                                          for layer in
-                                          self.get_intermediate_points(0)[1:-1]]
-        self.trajectory_artists = Line2D(self._trajectory[0, 0:1],
-                                         self._trajectory[0, 1:2],
-                                         color='red', linewidth=3)
-        artists = ([self.control_line_artists] + self.intermediate_line_artists
-                   + [self.trajectory_artists])
-        for artist in artists:
-            self.ax.add_line(artist)
-        return artists
 
     def update(self, frame):
         """

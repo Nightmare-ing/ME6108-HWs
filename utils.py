@@ -2,6 +2,7 @@ import csv
 import os.path
 
 import numpy as np
+from matplotlib.lines import Line2D
 
 
 def generate_rhombus(point1, point2):
@@ -85,3 +86,80 @@ def read_data_prompt(hw):
     print("You choose to test the file: ", file)
     return file_path
 
+class Curve:
+    def __init__(self, ax):
+        """
+        Basic properties of a custom curve class
+        :param ax: the Axes object to draw the curve
+        """
+        self.ax = ax
+        # properties for drawing
+        self.control_line_artists = None
+        self.intermediate_line_artists = None
+        self.trajectory_artists = None
+
+    @property
+    def _control_points(self):
+        """
+        Retrieve the data for control points
+        :return: Position of the control points, in the form of n x 2 np
+        array, each row is the coordinates of a point
+        """
+        return None
+
+    @property
+    def _trajectory(self):
+        """
+        Retrieve the data for the trajectory.
+        :return: Position of the trajectory, in the form of time_splits x 2
+        np array
+        """
+        return None
+
+    def get_intermediate_points(self, time_stamp):
+        """
+        Return the intermediate points at the given time stamp,
+        because we should draw the animation of the intermediate points
+        :param time_stamp: time stamp for required intermediate points.
+        :return: intermediate points along the time axis
+        """
+        return None
+
+    def initialize_artists(self):
+        """
+        Initialize the drawing Artists
+        """
+        self.control_line_artists = Line2D(self._control_points[:, 0],
+                                           self._control_points[:, 1],
+                                           marker='o', color='green',
+                                           linewidth=2)
+        self.intermediate_line_artists = [Line2D(layer[0, 0:1],
+                                                 layer[0, 1:2],
+                                                 marker='.', color='blue')
+                                          for layer in
+                                          self.get_intermediate_points(0)[1:-1]]
+        self.trajectory_artists = Line2D(self._trajectory[0, 0:1],
+                                         self._trajectory[0, 1:2],
+                                         color='red', linewidth=3)
+        artists = ([self.control_line_artists] + self.intermediate_line_artists
+                   + [self.trajectory_artists])
+        for artist in artists:
+            self.ax.add_line(artist)
+        return artists
+
+    def update(self, frame):
+        """
+        Update the properties of the artists for each frame of the animation
+        :param frame: frame number of the animation, equal to the timestamp
+        of the evolution of the line
+        :return: updated Artists
+        """
+        # update intermediate lines
+        for l in range(1, self.n - 1):
+            l_index = l - 1
+            self.intermediate_line_artists[l_index].set_data(
+                self.get_intermediate_points(frame)[l][:self.n - l].T)
+
+        # update trajectory line
+        self.trajectory_artists.set_data(self._trajectory[:frame].T)
+        return [self.control_line_artists] + self.intermediate_line_artists + [self.trajectory_artists]
