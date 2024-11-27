@@ -59,7 +59,7 @@ class BezierCurve(Curve):
         """
         return self.computed_points[:, self.n - 1, 0]
 
-    def get_intermediate_points(self, time_stamp):
+    def _get_intermediate_points(self, time_stamp):
         """
         Return the intermediate points at the given time stamp,
         because we should draw the animation of the intermediate points

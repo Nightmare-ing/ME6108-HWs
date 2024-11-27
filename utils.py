@@ -1,5 +1,6 @@
 import csv
 import os.path
+from abc import abstractmethod, abstractproperty
 
 import numpy as np
 from matplotlib.lines import Line2D
@@ -99,31 +100,34 @@ class Curve:
         self.trajectory_artists = None
 
     @property
+    @abstractmethod
     def _control_points(self):
         """
         Retrieve the data for control points
         :return: Position of the control points, in the form of n x 2 np
         array, each row is the coordinates of a point
         """
-        return None
+        pass
 
     @property
+    @abstractmethod
     def _trajectory(self):
         """
         Retrieve the data for the trajectory.
         :return: Position of the trajectory, in the form of time_splits x 2
         np array
         """
-        return None
+        pass
 
-    def get_intermediate_points(self, time_stamp):
+    @abstractmethod
+    def _get_intermediate_points(self, time_stamp):
         """
         Return the intermediate points at the given time stamp,
         because we should draw the animation of the intermediate points
         :param time_stamp: time stamp for required intermediate points.
         :return: intermediate points along the time axis
         """
-        return None
+        pass
 
     def initialize_artists(self):
         """
@@ -137,7 +141,7 @@ class Curve:
                                                  layer[0, 1:2],
                                                  marker='.', color='blue')
                                           for layer in
-                                          self.get_intermediate_points(0)[1:-1]]
+                                          self._get_intermediate_points(0)[1:-1]]
         self.trajectory_artists = Line2D(self._trajectory[0, 0:1],
                                          self._trajectory[0, 1:2],
                                          color='red', linewidth=3)
@@ -158,7 +162,7 @@ class Curve:
         for l in range(1, self.n - 1):
             l_index = l - 1
             self.intermediate_line_artists[l_index].set_data(
-                self.get_intermediate_points(frame)[l][:self.n - l].T)
+                self._get_intermediate_points(frame)[l][:self.n - l].T)
 
         # update trajectory line
         self.trajectory_artists.set_data(self._trajectory[:frame].T)
